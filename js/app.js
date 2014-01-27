@@ -5,9 +5,9 @@ var Card = Backbone.Model.extend({
 
 });
 
-
-
-
+var Deck = new Backbone.Collection({
+    model: Card
+});
 
 
 var imgur_fetch = function(){
@@ -26,11 +26,10 @@ var imgur_fetch = function(){
 
 var card_maker = function(images){ 
    var fakeCollection = [];
-   for (var i = 0; i < images.data.length; i++){
+   for (var i = 0; i < 12; i++){
         var card_inst = new Card({href:images.data[i].link})
-
-        fakeCollection.push(card_inst)
-   };
-   console.log(fakeCollection);
+        Deck.add(card_inst)
+    };
+   console.log(Deck.models);
 };
 
