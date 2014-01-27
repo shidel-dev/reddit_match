@@ -27,11 +27,10 @@ var imgur_fetch = function(){
 var card_maker = function(images){ 
    var fakeCollection = [];
    for (var i = 0; i < images.data.length; i++){
-        console.log(images.data[i].link);
+        var card_inst = new Card({href:images.data[i].link})
+
+        fakeCollection.push(card_inst)
    };
-
    console.log(fakeCollection);
-
-   
 };
 
