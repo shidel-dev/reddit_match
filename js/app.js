@@ -6,12 +6,9 @@ var Card = Backbone.Model.extend({
 });
 
 var Deck = new Backbone.Collection({
-    model: Card
-});
-
-
-var imgur_fetch = function(){
-   $.ajax({
+    model: Card,
+    seed: function(){
+    $.ajax({
      type:'GET',
      url: "https://api.imgur.com/3/gallery/r/pics/top/1",
      headers:{
@@ -19,6 +16,53 @@ var imgur_fetch = function(){
      },
      success: function(data){card_maker(data)}
     });
+
+    },
+});
+
+var Board = Backbone.View.extend({
+
+  tagName: "div",
+
+  className: "container",
+
+  events: {
+   
+  },
+
+  render: function() {
+    ...
+  }
+
+});
+
+var Card = Backbone.View.extend({
+
+  tagName: "img",
+
+  className: "card",
+
+  events: {
+   "click .submit": "render"
+  },
+
+  
+  render: function() {
+    
+  }
+
+});
+
+
+var imgur_fetch = function(){
+   // $.ajax({
+   //   type:'GET',
+   //   url: "https://api.imgur.com/3/gallery/r/pics/top/1",
+   //   headers:{
+   //      'Authorization':'Client-ID ' + 'e0a49fd55972ffa'
+   //   },
+   //   success: function(data){card_maker(data)}
+   //  });
 };
 
 
@@ -32,4 +76,5 @@ var card_maker = function(images){
     };
    console.log(Deck.models);
 };
+
 
