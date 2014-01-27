@@ -1,0 +1,23 @@
+@charset"utf-8";
+html, body, div, span, iframe, h1, h2, h3, h4, h5, h6, p {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    font-family: inherit
+}
+
+
+#sidebar{
+  display:inline-block;
+  width:20%;
+  height:100%;
+  border-right:1px;
+}
+
+#content{
+  display:inline-block;
+  width:75%;
+  height:100%;
+}
