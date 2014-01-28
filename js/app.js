@@ -2,7 +2,7 @@
 //board will be 4 x 6
 
 var Card = Backbone.Model.extend({
-
+  type:function(){}
 });
 
 var Deck = Backbone.Collection.extend({
@@ -22,9 +22,11 @@ var Board = Backbone.View.extend({
             }));
         });
     },
+    el: $('#container')[0],
 
-    collection: Deck,
-    el: $('#container')[0]
+
+    collection: Deck
+   
 
 });
 
@@ -53,9 +55,9 @@ var imgur_fetch = function() {
 var card_maker = function(images) {
     var tempCollection = [];
     for (var i = 0; i < 12; i++) {
-        tempCollection.push({
-            href: images.data[i].link
-        })
+        tempCollection.push(
+        {href: images.data[i].link}
+        )
     };
     var deck = new Deck(tempCollection);
     console.log(deck)
