@@ -1,22 +1,17 @@
-//make board collection
-//board will be 4 x 6
+var Card = Backbone.Model.extend({});
 
-var Card = Backbone.Model.extend({
-    tagName: 'img'
-});
-
-var Deck = Backbone.Collection.extend({
-    el: '#container',
-    model: Card,
-
-    render: function() {
-        $el.append("<p>ok</p>")
-    },
-
-});
+var Deck = new Backbone.Collection({
+    model: Card
+})
 
 var Board = Backbone.View.extend({
-    initialize: function() {
+
+    initialize:function(){
+        this.imgurFetch();
+    },
+
+    imgurFetch: function() {
+        var that = this;
         $.ajax({
             type: 'GET',
             url: "https://api.imgur.com/3/gallery/r/pics/top/1",
@@ -24,19 +19,43 @@ var Board = Backbone.View.extend({
                 'Authorization': 'Client-ID ' + 'e0a49fd55972ffa'
             },
             success: function(res) {
-                var d = new Deck(res.data.slice(0, 12))
-                console.log(d)
+                that.collection.add(res.data.slice(0, 11))
+                that.render();
             }
         });
+        // function scope(col){console.log(col)}
     },
 
-    collection: Deck
-
-
+    render: function() {
+        var that = this;
+        this.collection.each(function(card) {
+            if(card.attributes.link != undefined) {
+                // console.log(card.attributes.link)
+                var thisCardView = new CardView({model: card});
+                $(that.el).append(thisCardView.render().el);
+            }
+        })
+        return this;
+    }
 });
 
 var CardView = Backbone.View.extend({
-
-
+    tagName: "img",
+render: function() {
+        console.log(this)
+        this.el.src = this.model.get("link");
+        return this;
+    }
 });
 
+var b = new Board({
+    collection: Deck,
+    el: "#container"
+})
+// b.render();
+
+// console.log(Deck)
+
+// Deck.each(function(model){
+//    console.log(model.attributes.link) 
+// })
