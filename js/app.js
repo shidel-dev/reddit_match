@@ -14,7 +14,7 @@ var Board = Backbone.View.extend({
         var that = this;
         $.ajax({
             type: 'GET',
-            url: "https://api.imgur.com/3/gallery/r/pics/top/1",
+            url: "https://api.imgur.com/3/gallery/r/earthporn/top",
             headers: {
                 'Authorization': 'Client-ID ' + 'e0a49fd55972ffa'
             },
@@ -41,6 +41,7 @@ var Board = Backbone.View.extend({
 
 var CardView = Backbone.View.extend({
     tagName: "img",
+    className:'card',
 render: function() {
         console.log(this)
         this.el.src = this.model.get("link");
