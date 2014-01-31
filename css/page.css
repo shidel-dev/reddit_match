@@ -1,17 +1,21 @@
 @charset"utf-8";
 html, body, div, span, iframe, h1, h2, h3, h4, h5, h6, p {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font-size: 100%;
-    vertical-align: baseline;
-    font-family: inherit
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  font-family: inherit;
 }
 
 
 #container{
-  width:960px;
+  width:1200px;
   margin:auto;
 }
 
-.card{}
+.card{
+  width:280px;
+  margin-left:10px;
+  margin-right:10px;
+}

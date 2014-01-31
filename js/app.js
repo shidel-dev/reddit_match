@@ -14,23 +14,22 @@ var Board = Backbone.View.extend({
         var that = this;
         $.ajax({
             type: 'GET',
-            url: "https://api.imgur.com/3/gallery/r/earthporn/top",
+            url: "https://api.imgur.com/3/gallery/r/pics/top",
             headers: {
                 'Authorization': 'Client-ID ' + 'e0a49fd55972ffa'
             },
             success: function(res) {
-                that.collection.add(res.data.slice(0, 11))
+                that.collection.add(res.data.slice(0, 12))
                 that.render();
             }
         });
-        // function scope(col){console.log(col)}
+       
     },
 
     render: function() {
         var that = this;
         this.collection.each(function(card) {
             if(card.attributes.link != undefined) {
-                // console.log(card.attributes.link)
                 var thisCardView = new CardView({model: card});
                 $(that.el).append(thisCardView.render().el);
             }
@@ -53,10 +52,4 @@ var b = new Board({
     collection: Deck,
     el: "#container"
 })
-// b.render();
 
-// console.log(Deck)
-
-// Deck.each(function(model){
-//    console.log(model.attributes.link) 
-// })
