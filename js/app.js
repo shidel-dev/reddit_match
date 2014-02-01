@@ -39,11 +39,12 @@ var Board = Backbone.View.extend({
 });
 
 var CardView = Backbone.View.extend({
-    tagName: "img",
-    className:'card',
+    tagName: "a",
+    className:'fancybox',
 render: function() {
         console.log(this)
-        this.el.src = this.model.get("link");
+        this.el.href = this.model.get("link");
+        this.$el.html("<img src='img/card.jpg'></img>")
         return this;
     }
 });
@@ -52,4 +53,8 @@ var b = new Board({
     collection: Deck,
     el: "#container"
 })
+
+$(document).ready(function() {
+    $(".fancybox").fancybox();
+});
 
