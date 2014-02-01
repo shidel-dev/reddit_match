@@ -8,17 +8,20 @@ var DeckClone = new Backbone.Collection({
     model: Card
 })
 
+var subreddit;
+
 var Board = Backbone.View.extend({
 
-    initialize:function(){
+    initialize: function() {
         this.imgurFetch();
     },
 
     imgurFetch: function() {
         var that = this;
+        console.log(this.subreddit)
         $.ajax({
             type: 'GET',
-            url: "https://api.imgur.com/3/gallery/r/pics/top",
+            url: "https://api.imgur.com/3/gallery/r/"+subreddit+"/top",
             headers: {
                 'Authorization': 'Client-ID ' + 'e0a49fd55972ffa'
             },
@@ -28,21 +31,23 @@ var Board = Backbone.View.extend({
                 that.render();
             }
         });
-       
+
     },
 
     render: function() {
         var that = this;
         var htmlCollection = []
         this.collection.each(function(card) {
-            if(card.attributes.link != undefined) {
-                var thisCardView = new CardView({model: card});
+            if (card.attributes.link != undefined) {
+                var thisCardView = new CardView({
+                    model: card
+                });
                 htmlCollection.push(thisCardView.render().el);
             }
         })
         shuffleCollection = shuffle(htmlCollection);
         console.log(shuffleCollection)
-        _(shuffleCollection).each(function(card){
+        _(shuffleCollection).each(function(card) {
             $(that.el).append(card);
         })
         return this;
@@ -51,8 +56,8 @@ var Board = Backbone.View.extend({
 
 var CardView = Backbone.View.extend({
     tagName: "a",
-    className:'fancybox',
-render: function() {
+    className: 'fancybox',
+    render: function() {
         // console.log(this)
         this.el.href = this.model.get("link");
         this.$el.html("<img src='img/card.png'></img>")
@@ -60,22 +65,27 @@ render: function() {
     }
 });
 
-var b = new Board({
-    collection: Deck,
-    el: "#container"
-})
 
-console.log(b.collection)
+
+// console.log(b.collection)
 
 $(document).ready(function() {
     $(".fancybox").fancybox();
+    $("#request").click(function() {
+        subreddit = $('#subreddit').val()
+        var b = new Board({
+            collection: Deck,
+            el: "#container"
+            
+        })
+    })
+
 });
 
 
 
 
-function shuffle(o){ //v1.0
-    for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+function shuffle(o) { //v1.0
+    for (var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
     return o;
 };
-
