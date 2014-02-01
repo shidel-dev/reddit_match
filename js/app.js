@@ -4,6 +4,10 @@ var Deck = new Backbone.Collection({
     model: Card
 })
 
+var DeckClone = new Backbone.Collection({
+    model: Card
+})
+
 var Board = Backbone.View.extend({
 
     initialize:function(){
@@ -21,6 +25,7 @@ var Board = Backbone.View.extend({
             success: function(res) {
                 that.collection.add(res.data.slice(0, 12))
                 that.render();
+                that.render();
             }
         });
        
@@ -28,11 +33,17 @@ var Board = Backbone.View.extend({
 
     render: function() {
         var that = this;
+        var htmlCollection = []
         this.collection.each(function(card) {
             if(card.attributes.link != undefined) {
                 var thisCardView = new CardView({model: card});
-                $(that.el).append(thisCardView.render().el);
+                htmlCollection.push(thisCardView.render().el);
             }
+        })
+        shuffleCollection = shuffle(htmlCollection);
+        console.log(shuffleCollection)
+        _(shuffleCollection).each(function(card){
+            $(that.el).append(card);
         })
         return this;
     }
@@ -42,7 +53,7 @@ var CardView = Backbone.View.extend({
     tagName: "a",
     className:'fancybox',
 render: function() {
-        console.log(this)
+        // console.log(this)
         this.el.href = this.model.get("link");
         this.$el.html("<img src='img/card.png'></img>")
         return this;
@@ -54,7 +65,17 @@ var b = new Board({
     el: "#container"
 })
 
+console.log(b.collection)
+
 $(document).ready(function() {
     $(".fancybox").fancybox();
 });
+
+
+
+
+function shuffle(o){ //v1.0
+    for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+    return o;
+};
 
