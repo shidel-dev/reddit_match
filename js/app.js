@@ -44,7 +44,7 @@ var CardView = Backbone.View.extend({
 render: function() {
         console.log(this)
         this.el.href = this.model.get("link");
-        this.$el.html("<img src='img/card.jpg'></img>")
+        this.$el.html("<img src='img/card.png'></img>")
         return this;
     }
 });
