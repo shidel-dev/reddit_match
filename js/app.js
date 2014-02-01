@@ -14,7 +14,7 @@ var Board = Backbone.View.extend({
         var that = this;
         $.ajax({
             type: 'GET',
-            url: "https://api.imgur.com/3/gallery/r/pics/top",
+            url: "https://api.imgur.com/3/gallery/r/gifs/top",
             headers: {
                 'Authorization': 'Client-ID ' + 'e0a49fd55972ffa'
             },
