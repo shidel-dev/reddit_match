@@ -107,6 +107,7 @@ function gameLogic() {
                 if (picks[0].id != picks[1].id) {
                     var klass = "." + picks[0].class.split(' ')[1]
                     $(klass).children().hide()
+                    $(klass).unbind( "click" );
                 }
             }
             picks = []
