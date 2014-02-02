@@ -109,9 +109,32 @@ function gameLogic() {
                     $(klass).children().hide()
                     $(klass).unbind( "click" );
                 }
+            }else{
+                wrongPick(picks)
             }
             picks = []
+        }else if (picks.length == 1){
+            onePick(picks);
         }
     })
 
 };
+
+function onePick(picks){
+  $("#"+picks[0].id).addClass('right');
+}
+
+function wrongPick(picks){
+  $("#"+picks[0].id).removeClass('right').addClass('wrong');
+  $("#"+picks[1].id).fancybox({
+  afterClose: function() {
+    $("#"+picks[1].id).addClass('wrong')
+    setTimeout(function(){
+        $("#"+picks[0].id).removeClass('wrong');
+        $("#"+picks[1].id).removeClass('wrong');
+    },1500);
+
+    }
+  })
+};  
+
