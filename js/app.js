@@ -4,11 +4,8 @@ var Deck = new Backbone.Collection({
     model: Card
 })
 
-var DeckClone = new Backbone.Collection({
-    model: Card
-})
-
 var subreddit;
+var fullCollection = [];
 
 var Board = Backbone.View.extend({
 
@@ -21,14 +18,15 @@ var Board = Backbone.View.extend({
         console.log(this.subreddit)
         $.ajax({
             type: 'GET',
-            url: "https://api.imgur.com/3/gallery/r/"+subreddit+"/top",
+            url: "https://api.imgur.com/3/gallery/r/" + subreddit + "/top",
             headers: {
                 'Authorization': 'Client-ID ' + 'e0a49fd55972ffa'
             },
             success: function(res) {
                 that.collection.add(res.data.slice(0, 12))
+                fullCollection = doubleShuffle(that);
                 that.render();
-                that.render();
+                gameLogic();
             }
         });
 
@@ -37,12 +35,12 @@ var Board = Backbone.View.extend({
     render: function() {
         var that = this;
         var htmlCollection = []
-        this.collection.each(function(card) {
+        _(fullCollection).each(function(card, i) {
             if (card.attributes.link != undefined) {
                 var thisCardView = new CardView({
                     model: card
                 });
-                htmlCollection.push(thisCardView.render().el);
+                htmlCollection.push(thisCardView.render(i).el);
             }
         })
         shuffleCollection = shuffle(htmlCollection);
@@ -58,9 +56,9 @@ var CardView = Backbone.View.extend({
     tagName: "a",
     className: 'fancybox',
     render: function() {
-        // console.log(this)
+        this.$el.addClass(this.model.get("id"))
         this.el.href = this.model.get("link");
-        this.$el.html("<img src='img/card.png'></img>")
+        this.$el.html("<img id='card' src='img/card.png'></img>")
         return this;
     }
 });
@@ -76,16 +74,27 @@ $(document).ready(function() {
         var b = new Board({
             collection: Deck,
             el: "#container"
-            
+
         })
     })
 
 });
 
-
-
+function doubleShuffle(elem) {
+    fullCollection.push(elem.collection.models)
+    fullCollection.push(elem.collection.models)
+    return shuffle(_.flatten(fullCollection))
+};
 
 function shuffle(o) { //v1.0
     for (var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
     return o;
 };
+
+function gameLogic() {
+    
+    var picks = [];
+    $('.fancybox').click(function(e) {
+        picks.push($(e.target).parent().attr('class'));
+    })
+}
