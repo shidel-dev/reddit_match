@@ -55,8 +55,9 @@ var Board = Backbone.View.extend({
 var CardView = Backbone.View.extend({
     tagName: "a",
     className: 'fancybox',
-    render: function() {
+    render: function(i) {
         this.$el.addClass(this.model.get("id"))
+        this.$el.attr('id', i.toString())
         this.el.href = this.model.get("link");
         this.$el.html("<img id='card' src='img/card.png'></img>")
         return this;
@@ -86,7 +87,7 @@ function doubleShuffle(elem) {
     return shuffle(_.flatten(fullCollection))
 };
 
-function shuffle(o) { //v1.0
+function shuffle(o) {
     for (var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
     return o;
 };
@@ -95,15 +96,21 @@ function gameLogic() {
 
     var picks = [];
     $('.fancybox').click(function(e) {
-        picks.push($(e.target).parent().attr('class'));
+        picks.push({
+            class: $(e.target).parent().attr('class'),
+            id: $(e.target).parent().attr('id')
+        });
+
         if (picks.length == 2) {
             console.log(picks)
-            if (picks[0] == picks[1]) {
-                var klass = "." + picks[0].split(' ')[1]
-                $(klass).children().hide()
+            if (picks[0].class == picks[1].class) {
+                if (picks[0].id != picks[1].id) {
+                    var klass = "." + picks[0].class.split(' ')[1]
+                    $(klass).children().hide()
+                }
             }
             picks = []
         }
     })
 
-}
+};
