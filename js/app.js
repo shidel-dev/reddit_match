@@ -92,9 +92,18 @@ function shuffle(o) { //v1.0
 };
 
 function gameLogic() {
-    
+
     var picks = [];
     $('.fancybox').click(function(e) {
         picks.push($(e.target).parent().attr('class'));
+        if (picks.length == 2) {
+            console.log(picks)
+            if (picks[0] == picks[1]) {
+                var klass = "." + picks[0].split(' ')[1]
+                $(klass).children().hide()
+            }
+            picks = []
+        }
     })
+
 }
