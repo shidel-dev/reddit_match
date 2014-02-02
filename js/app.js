@@ -108,6 +108,9 @@ function gameLogic() {
                     var klass = "." + picks[0].class.split(' ')[1]
                     $(klass).children().hide()
                     $(klass).unbind( "click" );
+                    $(klass).removeClass("right");
+                    $(klass).removeClass("fancybox")
+                    $(klass).removeAttr("href");
                 }
             }else{
                 wrongPick(picks)
