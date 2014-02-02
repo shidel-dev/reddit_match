@@ -20,15 +20,17 @@
     font-size: 22px;
 }
 .fancybox {
-    width:150px;
-    height:225px;
+    width: 146px;
+    height: 225px;
     display: block;
     float: left;
+    margin: 2px
 }
 .card {
-    width:280px;
-    margin-left:10px;
-    margin-right:10px;
+    width: 140px;
+    display: inline;
+    margin-left: 4px;
+    margin-top: 8px;
 }
 img {
     width: 150px;
@@ -36,6 +38,14 @@ img {
 }
 input {
     height: 19px;
+}
+.wrong {
+    background-color: rgba(255, 0, 0, 0.68);
+    border-radius: 23px;
+}
+.right {
+    background-color: rgba(66, 162, 21, 0.68);
+    border-radius: 23px;
 }
 button.shiny-blue {
     background-color: #759ae9;
