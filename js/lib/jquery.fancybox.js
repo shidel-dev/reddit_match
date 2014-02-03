@@ -80,7 +80,7 @@
 
 			arrows     : true,
 			closeBtn   : true,
-			closeClick : false,
+			closeClick : true,
 			nextClick  : false,
 			mouseWheel : true,
 			autoPlay   : false,
