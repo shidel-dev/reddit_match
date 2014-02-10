@@ -65,9 +65,6 @@ var CardView = Backbone.View.extend({
 });
 
 
-
-// console.log(b.collection)
-
 $(document).ready(function() {
     $(".fancybox").fancybox();
     $("#request").click(function() {
@@ -106,11 +103,12 @@ function gameLogic() {
             if (picks[0].class == picks[1].class) {
                 if (picks[0].id != picks[1].id) {
                     var klass = "." + picks[0].class.split(' ')[1]
-                    $(klass).children().hide()
-                    $(klass).unbind( "click" );
-                    $(klass).removeClass("right");
-                    $(klass).removeClass("fancybox")
                     $(klass).removeAttr("href");
+                    $(klass).children().remove()
+                    $(klass).unbind( "click" );
+                    $(klass).removeClass();
+                    $.fancybox.close()
+
                 }
             }else{
                 wrongPick(picks)
@@ -135,7 +133,7 @@ function wrongPick(picks){
     setTimeout(function(){
         $("#"+picks[0].id).removeClass('wrong');
         $("#"+picks[1].id).removeClass('wrong');
-    },1500);
+    },900);
 
     }
   })
