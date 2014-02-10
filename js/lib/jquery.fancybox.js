@@ -130,7 +130,7 @@
 
 			// Override some properties
 			index   : 0,
-			type    : null,
+			type    : 'image',
 			href    : null,
 			content : null,
 			title   : null,
