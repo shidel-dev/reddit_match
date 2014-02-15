@@ -26,8 +26,7 @@ var Board = Backbone.View.extend({
                 that.collection.add(res.data.slice(0, 12))
                 fullCollection = doubleShuffle(that);
                 that.render();
-                gameLogic();
-            }
+             }
         });
 
     },
@@ -55,12 +54,36 @@ var Board = Backbone.View.extend({
 var CardView = Backbone.View.extend({
     tagName: "a",
     className: 'fancybox',
+    events: {
+        "click":"gameLogic"
+    },
     render: function(i) {
         this.$el.addClass(this.model.get("id"))
         this.$el.attr('id', i.toString())
         this.el.href = this.model.get("link");
         this.$el.html("<img class='card' src='img/card.png'></img>")
         return this;
+    },
+    picks:[],
+    gameLogic:function(e){
+        this.picks.push({
+            class: $(e.target).parent().attr('class'),
+            id: $(e.target).parent().attr('id')
+        });
+
+        if (this.picks.length == 2) {
+            console.log(this.picks)
+            if (this.picks[0].class == this.picks[1].class) {
+                if (this.picks[0].id != this.picks[1].id) {
+                    rightPick(this.picks)
+                }
+            } else {
+                wrongPick(this.picks)
+            }
+            this.picks = []
+        } else if (this.picks.length == 1) {
+            onePick(this.picks);
+        }
     }
 });
 
@@ -89,53 +112,40 @@ function shuffle(o) {
     return o;
 };
 
-function gameLogic() {
+// function gameLogic() {
 
-    var picks = [];
-    $('.fancybox').click(function(e) {
-        picks.push({
-            class: $(e.target).parent().attr('class'),
-            id: $(e.target).parent().attr('id')
-        });
+//     var picks = [];
+//     $('.fancybox').click(function(e) {
+        
+//     })
 
-        if (picks.length == 2) {
-            console.log(picks)
-            if (picks[0].class == picks[1].class) {
-                if (picks[0].id != picks[1].id) {
-                    var klass = "." + picks[0].class.split(' ')[1]
-                    $(klass).removeAttr("href");
-                    $(klass).children().remove()
-                    $(klass).unbind( "click" );
-                    $(klass).removeClass();
-                    $.fancybox.close()
+// };
 
-                }
-            }else{
-                wrongPick(picks)
-            }
-            picks = []
-        }else if (picks.length == 1){
-            onePick(picks);
-        }
-    })
 
-};
 
-function onePick(picks){
-  $("#"+picks[0].id).addClass('right');
+function onePick(picks) {
+    $("#" + picks[0].id).addClass('right');
 }
 
-function wrongPick(picks){
-  $("#"+picks[0].id).removeClass('right').addClass('wrong');
-  $("#"+picks[1].id).fancybox({
-  afterClose: function() {
-    $("#"+picks[1].id).addClass('wrong')
-    setTimeout(function(){
-        $("#"+picks[0].id).removeClass('wrong');
-        $("#"+picks[1].id).removeClass('wrong');
-    },900);
+function wrongPick(picks) {
+    $("#" + picks[0].id).removeClass('right').addClass('wrong');
+    $("#" + picks[1].id).fancybox({
+        afterClose: function() {
+            $("#" + picks[1].id).addClass('wrong')
+            setTimeout(function() {
+                $("#" + picks[0].id).removeClass('wrong');
+                $("#" + picks[1].id).removeClass('wrong');
+            }, 900);
 
-    }
-  })
-};  
+        }
+    })
+};
 
+function rightPick(picks) {
+    var klass = "." + picks[0].class.split(' ')[1]
+    $(klass).removeAttr("href");
+    $(klass).children().remove()
+    $(klass).unbind("click");
+    $(klass).removeClass();
+    $.fancybox.close();
+}
