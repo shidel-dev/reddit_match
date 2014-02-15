@@ -1,7 +1,7 @@
 reddit_match
 ============
 
-Classic Memory game, with a unpredictable Reddit flavored twist.
+Classic Memory game, with an unpredictable Reddit flavored twist.
 
 
 Built with BackBone.js, jQuery, and Underscore.js.
