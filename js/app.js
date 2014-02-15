@@ -6,6 +6,7 @@ var Deck = new Backbone.Collection({
 
 var subreddit;
 var fullCollection = [];
+var picks = [];
 
 var Board = Backbone.View.extend({
 
@@ -26,7 +27,7 @@ var Board = Backbone.View.extend({
                 that.collection.add(res.data.slice(0, 12))
                 fullCollection = doubleShuffle(that);
                 that.render();
-             }
+            }
         });
 
     },
@@ -55,7 +56,7 @@ var CardView = Backbone.View.extend({
     tagName: "a",
     className: 'fancybox',
     events: {
-        "click":"gameLogic"
+        "click": "gameLogic"
     },
     render: function(i) {
         this.$el.addClass(this.model.get("id"))
@@ -64,27 +65,64 @@ var CardView = Backbone.View.extend({
         this.$el.html("<img class='card' src='img/card.png'></img>")
         return this;
     },
-    picks:[],
-    gameLogic:function(e){
-        this.picks.push({
+
+    gameLogic: function(e) {
+
+        picks.push({
             class: $(e.target).parent().attr('class'),
             id: $(e.target).parent().attr('id')
         });
 
-        if (this.picks.length == 2) {
-            console.log(this.picks)
-            if (this.picks[0].class == this.picks[1].class) {
-                if (this.picks[0].id != this.picks[1].id) {
-                    rightPick(this.picks)
+        if (picks.length == 2) {
+            console.log(picks)
+            if (picks[0].class == picks[1].class) {
+                if (picks[0].id != picks[1].id) {
+                    this.rightPick(picks);
+                    picks = [];
+
                 }
             } else {
-                wrongPick(this.picks)
+                this.wrongPick(picks);
+                picks = [];
+
             }
-            this.picks = []
-        } else if (this.picks.length == 1) {
-            onePick(this.picks);
+
+
+        } else if (picks.length == 1) {
+            this.onePick();
         }
+        console.log(this)
+    },
+    onePick: function() {
+        $("#" + picks[0].id).addClass('right');
+    },
+
+
+
+    wrongPick: function(pair) {
+        $("#" + pair[0].id).removeClass('right').addClass('wrong');
+        $("#" + pair[1].id).fancybox({
+            afterClose: function() {
+                console.log(pair)
+                $("#" + pair[1].id).addClass('wrong')
+                setTimeout(function() {
+                    $("#" + pair[0].id).removeClass('wrong');
+                    $("#" + pair[1].id).removeClass('wrong');
+                }, 900);
+
+            }
+        })
+
+    },
+    rightPick: function(pair) {
+        var klass = "." + pair[0].class.split(' ')[1]
+        $(klass).removeAttr("href");
+        $(klass).children().remove()
+        $(klass).unbind("click");
+        $(klass).removeClass();
+        $.fancybox.close();
     }
+
 });
 
 
@@ -111,41 +149,3 @@ function shuffle(o) {
     for (var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
     return o;
 };
-
-// function gameLogic() {
-
-//     var picks = [];
-//     $('.fancybox').click(function(e) {
-        
-//     })
-
-// };
-
-
-
-function onePick(picks) {
-    $("#" + picks[0].id).addClass('right');
-}
-
-function wrongPick(picks) {
-    $("#" + picks[0].id).removeClass('right').addClass('wrong');
-    $("#" + picks[1].id).fancybox({
-        afterClose: function() {
-            $("#" + picks[1].id).addClass('wrong')
-            setTimeout(function() {
-                $("#" + picks[0].id).removeClass('wrong');
-                $("#" + picks[1].id).removeClass('wrong');
-            }, 900);
-
-        }
-    })
-};
-
-function rightPick(picks) {
-    var klass = "." + picks[0].class.split(' ')[1]
-    $(klass).removeAttr("href");
-    $(klass).children().remove()
-    $(klass).unbind("click");
-    $(klass).removeClass();
-    $.fancybox.close();
-}
