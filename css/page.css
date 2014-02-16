@@ -19,7 +19,7 @@
     font-family: sans-serif;
     font-size: 22px;
 }
-a{
+a {
     width: 146px;
     height: 225px;
     display: block;
@@ -38,6 +38,10 @@ img {
 }
 input {
     height: 19px;
+}
+#a {
+    width: 600px;
+    margin-left: 300px;
 }
 .wrong {
     background-color: rgba(255, 0, 0, 0.68);
