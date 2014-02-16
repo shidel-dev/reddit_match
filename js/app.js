@@ -115,12 +115,15 @@ var CardView = Backbone.View.extend({
 
     },
     rightPick: function(pair) {
-        var klass = "." + pair[0].class.split(' ')[1]
-        $(klass).removeAttr("href");
-        $(klass).children().remove()
-        $(klass).unbind("click");
-        $(klass).removeClass();
+        var klass = $("." + pair[0].class.split(' ')[1])
+        klass.removeAttr("href");
+        klass.children().remove()
+        klass.unbind("click");
+        klass.removeClass();
         $.fancybox.close();
+        if ($(".fancybox").length == 0) {
+            $("#container").html("<img id='a' src='" + _.sample(success) + "'></img>").css("display","block")
+        }
     }
 
 });
@@ -138,12 +141,18 @@ $(document).ready(function() {
     })
 
 });
+var success = ["http://31.media.tumblr.com/tumblr_m61zjnHB3o1qfw2dno1_400.gif",
+    "http://25.media.tumblr.com/952f0af42c4f854875606879aa87fd3c/tumblr_mhnw8krEnm1s4zq2io1_500.gif",
+    "http://whatgifs.com/wp-content/uploads/2012/03/funny-gifs-winning.gif"
+]
 
-function doubleShuffle(elem) {
-    fullCollection.push(elem.collection.models)
-    fullCollection.push(elem.collection.models)
-    return shuffle(_.flatten(fullCollection))
-};
+
+
+    function doubleShuffle(elem) {
+        fullCollection.push(elem.collection.models)
+        fullCollection.push(elem.collection.models)
+        return shuffle(_.flatten(fullCollection))
+    };
 
 function shuffle(o) {
     for (var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
