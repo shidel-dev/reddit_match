@@ -6,7 +6,6 @@ var Deck = Backbone.Collection.extend({
 
 
 var subreddit;
-var fullCollection = [];
 var picks = [];
 
 var Board = Backbone.View.extend({
@@ -21,7 +20,7 @@ var Board = Backbone.View.extend({
             type: 'GET',
             url: "https://api.imgur.com/3/gallery/r/" + subreddit + "/top",
             headers: {
-                'Authorization': 'Client-ID ' + 'e0a49fd55972ffa'
+                'Authorization': 'Client-ID e0a49fd55972ffa'
             },
             success: function(res) {
 
@@ -30,9 +29,7 @@ var Board = Backbone.View.extend({
                 })
         
                 that.collection.add(trimedObj);
-                
                 that.collection.add(trimedObj);
-                
                 that.render(shuffle(that.collection));
             }
         });
@@ -48,10 +45,11 @@ var Board = Backbone.View.extend({
                 var thisCardView = new CardView({
                     model: card
                 });
-                htmlCollection.push(thisCardView.render(i).el);
+                shuffColl[i] = (thisCardView.render(i).el);
+
             }
         })
-        _(htmlCollection).each(function(card) {
+        _(shuffColl).each(function(card) {
             $(that.el).append(card);
         })
         return this;
