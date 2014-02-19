@@ -1,9 +1,9 @@
 var Card = Backbone.Model.extend({});
-var DeckClass = Backbone.Collection.extend({
-    model: Card
+
+var Deck = Backbone.Collection.extend({
+    model:Card
 })
 
-var Deck = 
 
 var subreddit;
 var fullCollection = [];
@@ -17,7 +17,6 @@ var Board = Backbone.View.extend({
 
     imgurFetch: function() {
         var that = this;
-        console.log(this.subreddit)
         $.ajax({
             type: 'GET',
             url: "https://api.imgur.com/3/gallery/r/" + subreddit + "/top",
@@ -25,26 +24,26 @@ var Board = Backbone.View.extend({
                 'Authorization': 'Client-ID ' + 'e0a49fd55972ffa'
             },
             success: function(res) {
-                console.log(res)
+
                 var trimedObj = _.map(res.data.slice(0, 12),function(image){
-                    return {link:image.link, imgrID: image.id};
+                   return  {link:image.link, imgurID:image.id}
                 })
-                console.log(trimedObj)
-                //that.collection.add(trimedObj);
-                //that.collection.add(trimedObj);
-                console.log("foo");
-                console.log(that.collection.models)
-                // fullCollection = doubleShuffle(that);
-                that.render();
+        
+                that.collection.add(trimedObj);
+                
+                that.collection.add(trimedObj);
+                
+                that.render(shuffle(that.collection));
             }
         });
 
     },
 
-    render: function() {
+    render: function(shuffColl) {
+        console.log(shuffColl)
         var that = this;
         var htmlCollection = []
-        _(fullCollection).each(function(card, i) {
+        _(shuffColl.models).each(function(card, i) {
             if (card.attributes.link != undefined) {
                 var thisCardView = new CardView({
                     model: card
@@ -52,9 +51,7 @@ var Board = Backbone.View.extend({
                 htmlCollection.push(thisCardView.render(i).el);
             }
         })
-        shuffleCollection = shuffle(htmlCollection);
-        console.log(shuffleCollection)
-        _(shuffleCollection).each(function(card) {
+        _(htmlCollection).each(function(card) {
             $(that.el).append(card);
         })
         return this;
@@ -68,7 +65,7 @@ var CardView = Backbone.View.extend({
         "click": "gameLogic"
     },
     render: function(i) {
-        this.$el.addClass(this.model.get("id"))
+        this.$el.addClass(this.model.get("ImgurID"))
         this.$el.attr('id', i.toString())
         this.el.href = this.model.get("link");
         this.$el.html("<img class='card' src='img/card.png'></img>")
@@ -83,7 +80,6 @@ var CardView = Backbone.View.extend({
         });
 
         if (picks.length == 2) {
-            console.log(picks)
             if (picks[0].class == picks[1].class) {
                 if (picks[0].id != picks[1].id) {
                     this.rightPick(picks);
@@ -100,7 +96,6 @@ var CardView = Backbone.View.extend({
         } else if (picks.length == 1) {
             this.onePick();
         }
-        console.log(this)
     },
     onePick: function() {
         $("#" + picks[0].id).addClass('right');
@@ -112,7 +107,6 @@ var CardView = Backbone.View.extend({
         $("#" + pair[0].id).removeClass('right').addClass('wrong');
         $("#" + pair[1].id).fancybox({
             afterClose: function() {
-                console.log(pair)
                 $("#" + pair[1].id).addClass('wrong')
                 setTimeout(function() {
                     $("#" + pair[0].id).removeClass('wrong');
@@ -143,7 +137,7 @@ $(document).ready(function() {
     $("#request").click(function() {
         subreddit = $('#subreddit').val()
         var b = new Board({
-            collection: Deck,
+            collection: new Deck,
             el: "#container"
 
         })
@@ -156,12 +150,6 @@ var success = ["http://31.media.tumblr.com/tumblr_m61zjnHB3o1qfw2dno1_400.gif",
 ]
 
 
-
-    function doubleShuffle(elem) {
-        fullCollection.push(elem.collection.models)
-        fullCollection.push(elem.collection.models)
-        return shuffle(_.flatten(fullCollection))
-    };
 
 function shuffle(o) {
     for (var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
