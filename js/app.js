@@ -1,8 +1,9 @@
 var Card = Backbone.Model.extend({});
-
-var Deck = new Backbone.Collection({
+var DeckClass = Backbone.Collection.extend({
     model: Card
 })
+
+var Deck = 
 
 var subreddit;
 var fullCollection = [];
@@ -24,8 +25,16 @@ var Board = Backbone.View.extend({
                 'Authorization': 'Client-ID ' + 'e0a49fd55972ffa'
             },
             success: function(res) {
-                that.collection.add(res.data.slice(0, 12))
-                fullCollection = doubleShuffle(that);
+                console.log(res)
+                var trimedObj = _.map(res.data.slice(0, 12),function(image){
+                    return {link:image.link, imgrID: image.id};
+                })
+                console.log(trimedObj)
+                //that.collection.add(trimedObj);
+                //that.collection.add(trimedObj);
+                console.log("foo");
+                console.log(that.collection.models)
+                // fullCollection = doubleShuffle(that);
                 that.render();
             }
         });
