@@ -65,7 +65,7 @@ var CardView = Backbone.View.extend({
         "click": "gameLogic"
     },
     render: function(i) {
-        this.$el.addClass(this.model.get("ImgurID"))
+        this.$el.addClass(this.model.get("imgurID"))
         this.$el.attr('id', i.toString())
         this.el.href = this.model.get("link");
         this.$el.html("<img class='card' src='img/card.png'></img>")
