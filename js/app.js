@@ -133,15 +133,12 @@ var CardView = Backbone.View.extend({
 
 $(document).ready(function() {
     $(".fancybox").fancybox();
-    $("#request").click(_.once(function() {
-        subreddit = $('#subreddit').val()
-        var b = new Board({
-            collection: new Deck,
-            el: "#container"
-
-        })
-    })
-    )
+    $("#request").click(loadUrls)
+    $("#subreddit").keyup(function (e) {
+        if (e.keyCode == 13) {
+            loadUrls()
+        }
+    });
 
 });
 var success = ["http://31.media.tumblr.com/tumblr_m61zjnHB3o1qfw2dno1_400.gif",
@@ -149,8 +146,15 @@ var success = ["http://31.media.tumblr.com/tumblr_m61zjnHB3o1qfw2dno1_400.gif",
     "http://whatgifs.com/wp-content/uploads/2012/03/funny-gifs-winning.gif"
 ]
 
+loadUrls = _.once(stub)
 
-
+function stub(){
+        subreddit = $('#subreddit').val()
+        var b = new Board({
+            collection: new Deck,
+            el: "#container"
+        }) 
+}
 function shuffle(o) {
     for (var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
     return o;
