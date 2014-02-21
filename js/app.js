@@ -39,7 +39,6 @@ var Board = Backbone.View.extend({
     render: function(shuffColl) {
         console.log(shuffColl)
         var that = this;
-        var htmlCollection = []
         _(shuffColl.models).each(function(card, i) {
             if (card.attributes.link != undefined) {
                 var thisCardView = new CardView({
@@ -71,10 +70,12 @@ var CardView = Backbone.View.extend({
     },
 
     gameLogic: function(e) {
-
+        var el = $(e.target).parent()[0]
+        console.log(el)
         picks.push({
-            class: $(e.target).parent().attr('class'),
-            id: $(e.target).parent().attr('id')
+            class: $(el).attr('class'),
+            id: $(el).attr('id'),
+            el:el
         });
 
         if (picks.length == 2) {
@@ -85,7 +86,9 @@ var CardView = Backbone.View.extend({
 
                 }
             } else {
+                console.log('ok')
                 this.wrongPick(picks);
+                console.log(picks)
                 picks = [];
 
             }
@@ -96,23 +99,21 @@ var CardView = Backbone.View.extend({
         }
     },
     onePick: function() {
-        $("#" + picks[0].id).addClass('right');
+        $(picks[0].el).addClass('right');
     },
 
 
 
     wrongPick: function(pair) {
-        $("#" + pair[0].id).removeClass('right').addClass('wrong');
-        $("#" + pair[1].id).fancybox({
-            afterClose: function() {
-                $("#" + pair[1].id).addClass('wrong')
+        $(pair[0].el).removeClass('right').addClass('wrong');
+                $(pair[1].el).addClass('wrong')
                 setTimeout(function() {
-                    $("#" + pair[0].id).removeClass('wrong');
-                    $("#" + pair[1].id).removeClass('wrong');
+                    $(pair[0].el).removeClass('wrong');
+                    $(pair[1].el).removeClass('wrong');
                 }, 900);
 
-            }
-        })
+            
+        
 
     },
     rightPick: function(pair) {
