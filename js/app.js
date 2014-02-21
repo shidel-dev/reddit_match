@@ -133,7 +133,7 @@ var CardView = Backbone.View.extend({
 
 $(document).ready(function() {
     $(".fancybox").fancybox();
-    $("#request").click(function() {
+    $("#request").click(_.once(function() {
         subreddit = $('#subreddit').val()
         var b = new Board({
             collection: new Deck,
@@ -141,6 +141,7 @@ $(document).ready(function() {
 
         })
     })
+    )
 
 });
 var success = ["http://31.media.tumblr.com/tumblr_m61zjnHB3o1qfw2dno1_400.gif",
