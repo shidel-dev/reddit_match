@@ -85,11 +85,17 @@ var CardView = Backbone.View.extend({
 
   rightPick: function(){
     this.$el.addClass("right")
-    this.showImage(this.url)
+    this.showImage(this.model.attributes.link)
   },
 
   match:function(){
     this.$el.remove()
+  },
+
+  showImage:function(imageHref){
+    $.fancybox.open({
+      href: imageHref
+    })
   }
 
 
