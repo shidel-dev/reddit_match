@@ -75,8 +75,6 @@ var CardView = Backbone.View.extend({
   },
 
   render: function(i) {
-    this.$el.addClass(this.model.get("imgurID"))
-    this.el.id = this.model.get("link");
     this.$el.html("<img class='card' src='img/card.png'></img>")
     return this;
   },
@@ -87,6 +85,7 @@ var CardView = Backbone.View.extend({
 
   rightPick: function(){
     this.$el.addClass("right")
+    this.showImage(this.url)
   },
 
   match:function(){
