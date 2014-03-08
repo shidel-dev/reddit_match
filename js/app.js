@@ -6,9 +6,13 @@ var Card = Backbone.Model.extend({
       target.firstPick()
     }else if(pair.length === 1){
       pair.push(this);
-      if (this.isMatch(this.collection.pair)){
+      if (this.isMatch(pair)){
+        this.collection.remove(pair[0]);
+        this.collection.remove(pair[1]);
+        pair.length = 0;
       }else{
-        target.secondPick(pair)
+        target.secondPick(_.clone(pair))
+        pair.length = 0;
       }
     }  
   },
@@ -72,7 +76,7 @@ var CardView = Backbone.View.extend({
   },
 
   initialize:function(){
-    this.model.on("remove",this.clearCard);
+    this.model.on("remove",this.match.bind(this));
     this.model.on("wrong", this.wrongPick.bind(this));
   },
 
@@ -109,7 +113,8 @@ var CardView = Backbone.View.extend({
   },
 
   match:function(){ 
-    this.$el.remove()
+    this.$el.children("img").remove();
+    this.$el.attr("class","")
   },
 
   showImage:function(imageHref,callback){
