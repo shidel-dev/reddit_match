@@ -1,6 +1,14 @@
 var Card = Backbone.Model.extend({
-  gameLogic:function(){
-    this.collection.remove(this)
+  gameLogic:function(target){
+    if (this.collection.pair.length <= 1){
+      this.collection.pair.push(this);
+      target.rightPick()
+    }else if(this.collection === 1){
+      this.collection.pair.push(this);
+      if (isMatch(this.collection.pair)){
+        this
+      }
+    }  
   }
 });
 
@@ -73,12 +81,16 @@ var CardView = Backbone.View.extend({
     return this;
   },
 
-  sendAction: function(args){
-    this.model.gameLogic()
+  sendAction: function(event){
+    this.model.gameLogic(this)
   },
 
-  clearCard:function(){
-    debugger;
+  rightPick: function(){
+    this.$el.addClass("right")
+  },
+
+  match:function(){
+    this.$el.remove()
   }
 
 
