@@ -8,7 +8,7 @@ var Card = Backbone.Model.extend({
       pair.push(this);
       if (this.isMatch(this.collection.pair)){
       }else{
-        target.secondPick()
+        target.secondPick(pair)
       }
     }  
   },
@@ -72,8 +72,8 @@ var CardView = Backbone.View.extend({
   },
 
   initialize:function(){
-    this.model.on("remove",this.clearCard)
-    this.model.on("wrongPick", this.wrongPick)
+    this.model.on("remove",this.clearCard);
+    this.model.on("wrong", this.wrongPick.bind(this));
   },
 
   render: function() {
@@ -82,8 +82,7 @@ var CardView = Backbone.View.extend({
   },
 
   sendAction: function(event){
-    debugger;
-    this.model.gameLogic(this)
+    this.model.gameLogic(this);
   },
 
   firstPick: function(){
@@ -92,11 +91,21 @@ var CardView = Backbone.View.extend({
   },
 
   secondPick: function(pair){
-    this.showImage(this.model.attributes.link,function(){});
+    this.showImage(this.model.attributes.link,this.triggerWrong.bind(pair));
   },
 
+  triggerWrong: function(){
+    this[0].trigger("wrong");
+    this[1].trigger("wrong");
+  },
+
+
   wrongPick: function(){
-    
+    this.$el.attr("class","wrong");
+    var that = this
+    setTimeout(function(){
+      that.$el.removeClass("wrong");
+    },500)
   },
 
   match:function(){ 
