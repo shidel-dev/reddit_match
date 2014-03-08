@@ -1,19 +1,26 @@
 var Card = Backbone.Model.extend({
   gameLogic:function(target){
-    if (this.collection.pair.length <= 1){
-      this.collection.pair.push(this);
-      target.rightPick()
-    }else if(this.collection === 1){
-      this.collection.pair.push(this);
-      if (isMatch(this.collection.pair)){
-        this
+    var pair = this.collection.pair
+    if (pair.length < 1){
+      pair.push(this);
+      target.firstPick()
+    }else if(pair.length === 1){
+      pair.push(this);
+      if (this.isMatch(this.collection.pair)){
+      }else{
+        target.secondPick()
       }
     }  
+  },
+
+  isMatch:function(pair){
+    return (pair[0].attributes.imgurID === pair[1].attributes.imgurID && pair[0].cid !== pair[1].cid);
   }
+
 });
 
 var Deck = Backbone.Collection.extend({
-  model: Card,
+  model:Card,
   pair:[]
 })
 
@@ -50,15 +57,9 @@ var Board = Backbone.View.extend({
   render: function(shuffColl) {
     var that = this;
     _(shuffColl.models).each(function(card, i) {
-      if (card.attributes.link != undefined) {
-        var thisCardView = new CardView({
+        $(that.el).append(new CardView({
           model: card
-        });
-        shuffColl[i] = (thisCardView.render(i).el);
-      }
-    })
-    _(shuffColl).each(function(card) {
-      $(that.el).append(card);
+        }).render().el)
     })
     return this;
   }
@@ -72,29 +73,40 @@ var CardView = Backbone.View.extend({
 
   initialize:function(){
     this.model.on("remove",this.clearCard)
+    this.model.on("wrongPick", this.wrongPick)
   },
 
-  render: function(i) {
+  render: function() {
     this.$el.html("<img class='card' src='img/card.png'></img>")
     return this;
   },
 
   sendAction: function(event){
+    debugger;
     this.model.gameLogic(this)
   },
 
-  rightPick: function(){
-    this.$el.addClass("right")
-    this.showImage(this.model.attributes.link)
+  firstPick: function(){
+    this.$el.addClass("right");
+    this.showImage(this.model.attributes.link, undefined);
   },
 
-  match:function(){
+  secondPick: function(pair){
+    this.showImage(this.model.attributes.link,function(){});
+  },
+
+  wrongPick: function(){
+    
+  },
+
+  match:function(){ 
     this.$el.remove()
   },
 
-  showImage:function(imageHref){
+  showImage:function(imageHref,callback){
     $.fancybox.open({
-      href: imageHref
+      href: imageHref,
+      afterClose:callback
     })
   }
 
