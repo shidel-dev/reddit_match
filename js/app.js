@@ -29,8 +29,6 @@ var Deck = Backbone.Collection.extend({
 });
 
 
-var subreddit;
-
 var Board = Backbone.View.extend({
 
   initialize: function() {
@@ -39,9 +37,10 @@ var Board = Backbone.View.extend({
 
   imgurFetch: function() {
     var that = this;
+    debugger;
     $.ajax({
       type: 'GET',
-      url: "https://api.imgur.com/3/gallery/r/" + subreddit + "/top",
+      url: "https://api.imgur.com/3/gallery/r/" + that.subreddit + "/top",
       headers: {
         'Authorization': 'Client-ID e0a49fd55972ffa'
       },
@@ -127,15 +126,14 @@ var CardView = Backbone.View.extend({
 
 
 $(document).ready(function() {
-  $(".fancybox").fancybox();
   $("#request").click(loadUrls);
   $("#subreddit").keyup(function(e) {
     if (e.keyCode == 13) {
       loadUrls();
     }
   });
-
 });
+
 var success = ["http://31.media.tumblr.com/tumblr_m61zjnHB3o1qfw2dno1_400.gif",
 "http://25.media.tumblr.com/952f0af42c4f854875606879aa87fd3c/tumblr_mhnw8krEnm1s4zq2io1_500.gif",
 "http://whatgifs.com/wp-content/uploads/2012/03/funny-gifs-winning.gif"
@@ -144,10 +142,9 @@ var success = ["http://31.media.tumblr.com/tumblr_m61zjnHB3o1qfw2dno1_400.gif",
 var loadUrls = _.once(createBoard);
 
 function createBoard() {
-  subreddit = $('#subreddit').val();
   new Board({
     collection: new Deck(),
-    el: "#container"
+    el: "#container",
   });
 }
 
