@@ -41,7 +41,6 @@ var Board = Backbone.View.extend({
         that.imgurFetch();
         $(this).unbind();
       }
-
     });
     
   },
@@ -63,14 +62,17 @@ var Board = Backbone.View.extend({
           that.collection.add(trimedObj);
           that.collection.add(trimedObj);
           window.test = that.render(shuffle(that.collection));
+          $("#menu > p").remove();
         }else{
           that.initialize();
           $("#menu").append("<p>Error fetching that subreddit...</p>");
+          $("#subreddit").val("")
         }
       },
       error: function(err){
         that.initialize();
         $("#menu").append("<p>Error fetching that subreddit...</p>");
+        $("#subreddit").val("")
       }
     });
 
@@ -160,13 +162,14 @@ function shuffle(o) {
 }
 
 
+
+// -- shim for function.prototype.bind to be on the safe side!-- 
 if (!Function.prototype.bind) {
   Function.prototype.bind = function (oThis) {
     if (typeof this !== "function") {
       // closest thing possible to the ECMAScript 5 internal IsCallable function
       throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
     }
-
     var aArgs = Array.prototype.slice.call(arguments, 1), 
     fToBind = this, 
     fNOP = function () {},
@@ -176,7 +179,6 @@ if (!Function.prototype.bind) {
        : oThis,
        aArgs.concat(Array.prototype.slice.call(arguments)));
     };
-
     fNOP.prototype = this.prototype;
     fBound.prototype = new fNOP();
 
