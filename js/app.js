@@ -1,17 +1,22 @@
 var Card = Backbone.Model.extend({
   gameLogic:function(target) {
-    var pair = this.collection.pair;
-    if (pair.length < 1){
-      pair.push(this);
+    if (this.collection.pair.length === 0){
+      this.collection.pair.push(this);
       target.firstPick();
     }else{
-      pair.push(this);
-      if (this.matches(pair)){
-        this.collection.remove(pair);
-        pair.length = 0;
+      this.collection.pair.push(this);
+      if (this.matches(this.collection.pair)){
+        var that = this;
+        var pair = _.clone(that.collection.pair)
+        that.collection.pair = [];
+        that.collection.remove(pair);
+        // if (!this.collection.length){
+        //   $("#container").html("<img src='"+_.sample(success)+"'><img>")
+        // };
+       
       }else{
-        target.secondPick(_.clone(pair));
-        pair.length = 0;
+        target.secondPick(_.clone(this.collection.pair));
+        this.collection.pair = [];
       }
     }  
   },
@@ -61,7 +66,7 @@ var Board = Backbone.View.extend({
           });
           that.collection.add(trimedObj);
           that.collection.add(trimedObj);
-          window.test = that.render(shuffle(that.collection));
+          that.render(shuffle(that.collection.models));
           $("#menu > p").remove();
         }else{
           that.initialize();
@@ -80,7 +85,7 @@ var Board = Backbone.View.extend({
 
   render: function(shuffColl) {
     var that = this;
-    _(shuffColl.models).each(function(card) {
+    _(shuffColl).each(function(card) {
         $(that.el).append(new CardView({
           model: card
         }).render().el);
@@ -91,6 +96,7 @@ var Board = Backbone.View.extend({
 
 var CardView = Backbone.View.extend({
   tagName: "span",
+  model:Card,
   events: {
     "click": "sendAction"
   },
