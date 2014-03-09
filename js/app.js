@@ -6,14 +6,10 @@ var Card = Backbone.Model.extend({
     }else{
       this.collection.pair.push(this);
       if (this.matches(this.collection.pair)){
-        var that = this;
-        var pair = _.clone(that.collection.pair)
-        that.collection.pair = [];
-        that.collection.remove(pair);
-        // if (!this.collection.length){
-        //   $("#container").html("<img src='"+_.sample(success)+"'><img>")
-        // };
-       
+        var that = this
+        var pair = _.clone(this.collection.pair)
+        this.collection.pair = [];
+        this.collection.remove(pair);
       }else{
         target.secondPick(_.clone(this.collection.pair));
         this.collection.pair = [];
