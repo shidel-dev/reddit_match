@@ -33,7 +33,6 @@ var Board = Backbone.View.extend({
   initialize: function() {
     var that = this;
     $("#request").click(function() {
-      debugger;
       that.imgurFetch();
       $(this).unbind();
     });
