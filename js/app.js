@@ -1,14 +1,13 @@
 var Card = Backbone.Model.extend({
-  gameLogic:function(target){
+  gameLogic:function(target) {
     var pair = this.collection.pair;
     if (pair.length < 1){
       pair.push(this);
       target.firstPick();
-    }else if(pair.length === 1){
+    }else{
       pair.push(this);
-      if (this.isMatch(pair)){
-        this.collection.remove(pair[0]);
-        this.collection.remove(pair[1]);
+      if (this.matches(pair)){
+        this.collection.remove(pair);
         pair.length = 0;
       }else{
         target.secondPick(_.clone(pair));
@@ -17,7 +16,7 @@ var Card = Backbone.Model.extend({
     }  
   },
 
-  isMatch:function(pair){
+  matches:function(pair) {
     return (pair[0].attributes.imgurID === pair[1].attributes.imgurID && pair[0].cid !== pair[1].cid);
   }
 
@@ -32,15 +31,28 @@ var Deck = Backbone.Collection.extend({
 var Board = Backbone.View.extend({
 
   initialize: function() {
-    this.imgurFetch();
+    var that = this;
+    $("#request").click(function() {
+      debugger;
+      that.imgurFetch();
+      $(this).unbind();
+    });
+    $("#subreddit").keyup(function(e) {
+      if (e.keyCode == 13) {
+        that.imgurFetch();
+        $(this).unbind();
+      }
+
+    });
+    
   },
 
   imgurFetch: function() {
-    var that = this;
-    debugger;
+    var subreddit = $("#subreddit").val(),
+        that = this;
     $.ajax({
       type: 'GET',
-      url: "https://api.imgur.com/3/gallery/r/" + that.subreddit + "/top",
+      url: "https://api.imgur.com/3/gallery/r/" + subreddit + "/top",
       headers: {
         'Authorization': 'Client-ID e0a49fd55972ffa'
       },
@@ -73,7 +85,7 @@ var CardView = Backbone.View.extend({
     "click": "sendAction"
   },
 
-  initialize:function(){
+  initialize:function() {
     this.model.on("remove",this.match.bind(this));
     this.model.on("wrong", this.wrongPick.bind(this));
   },
@@ -83,33 +95,33 @@ var CardView = Backbone.View.extend({
     return this;
   },
 
-  sendAction: function(){
+  sendAction: function() {
     this.model.gameLogic(this);
   },
 
-  firstPick: function(){
+  firstPick: function() {
     this.$el.addClass("right");
     this.showImage(this.model.attributes.link, undefined);
   },
 
-  secondPick: function(pair){
+  secondPick: function(pair) {
     this.showImage(this.model.attributes.link,this.triggerWrong.bind(pair));
   },
 
-  triggerWrong: function(){
+  triggerWrong: function() {
     this[0].trigger("wrong");
     this[1].trigger("wrong");
   },
 
-  wrongPick: function(){
+  wrongPick: function() {
     this.$el.attr("class","wrong");
     var that = this;
-    setTimeout(function(){
+    setTimeout(function() {
       that.$el.removeClass("wrong");
     },500);
   },
 
-  match:function(){ 
+  match:function() { 
     this.$el.children("img").remove();
     this.$el.attr("class","");
   },
@@ -121,32 +133,18 @@ var CardView = Backbone.View.extend({
     });
   }
 
-
 });
 
-
-$(document).ready(function() {
-  $("#request").click(loadUrls);
-  $("#subreddit").keyup(function(e) {
-    if (e.keyCode == 13) {
-      loadUrls();
-    }
-  });
-});
-
-var success = ["http://31.media.tumblr.com/tumblr_m61zjnHB3o1qfw2dno1_400.gif",
-"http://25.media.tumblr.com/952f0af42c4f854875606879aa87fd3c/tumblr_mhnw8krEnm1s4zq2io1_500.gif",
-"http://whatgifs.com/wp-content/uploads/2012/03/funny-gifs-winning.gif"
-];
-
-var loadUrls = _.once(createBoard);
-
-function createBoard() {
+$(function() {
   new Board({
     collection: new Deck(),
     el: "#container",
   });
-}
+});
+
+var success = ["http://31.media.tumblr.com/tumblr_m61zjnHB3o1qfw2dno1_400.gif",
+               "http://25.media.tumblr.com/952f0af42c4f854875606879aa87fd3c/tumblr_mhnw8krEnm1s4zq2io1_500.gif",
+               "http://whatgifs.com/wp-content/uploads/2012/03/funny-gifs-winning.gif"];
 
 function shuffle(o) {
   for (var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
