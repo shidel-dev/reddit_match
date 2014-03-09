@@ -7,11 +7,17 @@ var Card = Backbone.Model.extend({
       this.collection.pair.push(this);
       if (this.matches(this.collection.pair)){
         if(this.collection.length === 2){
-          $("#container").html("<img id='a' src='" + _.sample(success) + "'></img>").css("display","block")
+          $("#container").html("<img id='a' src='" + _.sample(success) + "'></img>").css("display","block");
+            new Board({
+              collection: new Deck(),
+              el: "#container",
+            });
+            this.collection.pair = [];
         }
         var pair = _.clone(this.collection.pair);
         this.collection.pair = [];
         this.collection.remove(pair);
+
       }else{
         target.secondPick(_.clone(this.collection.pair));
         this.collection.pair = [];
@@ -83,8 +89,9 @@ var Board = Backbone.View.extend({
 
   render: function(shuffColl) {
     var that = this;
+    this.$el.empty()
     _(shuffColl).each(function(card) {
-        $(that.el).append(new CardView({
+        that.$el.append(new CardView({
           model: card
         }).render().el);
     });
