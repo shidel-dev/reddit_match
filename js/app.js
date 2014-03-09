@@ -65,12 +65,12 @@ var Board = Backbone.View.extend({
           window.test = that.render(shuffle(that.collection));
         }else{
           that.initialize();
-          $("#menu").append("<p>Error fetching that subreddit...</p>")
+          $("#menu").append("<p>Error fetching that subreddit...</p>");
         }
       },
       error: function(err){
         that.initialize();
-        $("#menu").append("<p>Error fetching that subreddit...</p>")
+        $("#menu").append("<p>Error fetching that subreddit...</p>");
       }
     });
 
@@ -95,7 +95,7 @@ var CardView = Backbone.View.extend({
 
   initialize:function() {
     this.model.on("remove",this.match.bind(this));
-    this.model.on("wrong", this.wrongPick.bind(this));
+    this.model.on("fancyBoxClose", this.wrongPick.bind(this));
   },
 
   render: function() {
@@ -117,8 +117,8 @@ var CardView = Backbone.View.extend({
   },
 
   triggerWrong: function() {
-    this[0].trigger("wrong");
-    this[1].trigger("wrong");
+    this[0].trigger("fancyBoxClose");
+    this[1].trigger("fancyBoxClose");
   },
 
   wrongPick: function() {
@@ -157,4 +157,29 @@ var success = ["http://31.media.tumblr.com/tumblr_m61zjnHB3o1qfw2dno1_400.gif",
 function shuffle(o) {
   for (var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
     return o;
+}
+
+
+if (!Function.prototype.bind) {
+  Function.prototype.bind = function (oThis) {
+    if (typeof this !== "function") {
+      // closest thing possible to the ECMAScript 5 internal IsCallable function
+      throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+    }
+
+    var aArgs = Array.prototype.slice.call(arguments, 1), 
+    fToBind = this, 
+    fNOP = function () {},
+    fBound = function () {
+      return fToBind.apply(this instanceof fNOP && oThis
+       ? this
+       : oThis,
+       aArgs.concat(Array.prototype.slice.call(arguments)));
+    };
+
+    fNOP.prototype = this.prototype;
+    fBound.prototype = new fNOP();
+
+    return fBound;
+  };
 }
