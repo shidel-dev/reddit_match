@@ -6,6 +6,9 @@ var Card = Backbone.Model.extend({
     }else{
       this.collection.pair.push(this);
       if (this.matches(this.collection.pair)){
+        if(this.collection.length === 2){
+          $("#container").html("<img id='a' src='" + _.sample(success) + "'></img>").css("display","block")
+        }
         var pair = _.clone(this.collection.pair);
         this.collection.pair = [];
         this.collection.remove(pair);
