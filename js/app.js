@@ -56,12 +56,21 @@ var Board = Backbone.View.extend({
         'Authorization': 'Client-ID e0a49fd55972ffa'
       },
       success: function(res) {
-        var trimedObj = _.map(res.data.slice(0, 12), function(image) {
-          return {link: image.link, imgurID: image.id};
-        });
-        that.collection.add(trimedObj);
-        that.collection.add(trimedObj);
-        window.test = that.render(shuffle(that.collection));
+        if(res.data.length){
+          var trimedObj = _.map(res.data.slice(0, 12), function(image) {
+            return {link: image.link, imgurID: image.id};
+          });
+          that.collection.add(trimedObj);
+          that.collection.add(trimedObj);
+          window.test = that.render(shuffle(that.collection));
+        }else{
+          that.initialize();
+          $("#menu").append("<p>Error fetching that subreddit...</p>")
+        }
+      },
+      error: function(err){
+        that.initialize();
+        $("#menu").append("<p>Error fetching that subreddit...</p>")
       }
     });
 
