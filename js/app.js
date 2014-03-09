@@ -6,8 +6,10 @@ var Card = Backbone.Model.extend({
     }else{
       this.collection.pair.push(this);
       if (this.matches(this.collection.pair)){
-        var that = this
-        var pair = _.clone(this.collection.pair)
+        if(this.collection.length === 2){
+          $("#container").html("<img id='a' src='" + _.sample(success) + "'></img>").css("display","block")
+        }
+        var pair = _.clone(this.collection.pair);
         this.collection.pair = [];
         this.collection.remove(pair);
       }else{
@@ -67,13 +69,13 @@ var Board = Backbone.View.extend({
         }else{
           that.initialize();
           $("#menu").append("<p>Error fetching that subreddit...</p>");
-          $("#subreddit").val("")
+          $("#subreddit").val("");
         }
       },
       error: function(err){
         that.initialize();
         $("#menu").append("<p>Error fetching that subreddit...</p>");
-        $("#subreddit").val("")
+        $("#subreddit").val("");
       }
     });
 
@@ -176,10 +178,7 @@ if (!Function.prototype.bind) {
     fToBind = this, 
     fNOP = function () {},
     fBound = function () {
-      return fToBind.apply(this instanceof fNOP && oThis
-       ? this
-       : oThis,
-       aArgs.concat(Array.prototype.slice.call(arguments)));
+      return fToBind.apply(this instanceof fNOP && oThis ? this: oThis, aArgs.concat(Array.prototype.slice.call(arguments)));
     };
     fNOP.prototype = this.prototype;
     fBound.prototype = new fNOP();
