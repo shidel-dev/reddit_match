@@ -47,6 +47,7 @@ input {
 #a {
     width: 600px;
     margin-left: 300px;
+    display:block;
 }
 .wrong {
     background-color: rgba(255, 0, 0, 0.68);
