@@ -159,7 +159,7 @@ var CardView = Backbone.View.extend({
 $(function() {
   new Board({
     collection: new Deck(),
-    el: "#container",
+    el: "#container"
   });
 });
 
