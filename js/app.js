@@ -10,7 +10,7 @@ var Card = Backbone.Model.extend({
           $("#container").html("<img id='a' src='" + _.sample(success) + "'></img>").css("display","block");
             new Board({
               collection: new Deck(),
-              el: "#container",
+              el: "#container"
             });
             this.collection.pair = [];
         }
