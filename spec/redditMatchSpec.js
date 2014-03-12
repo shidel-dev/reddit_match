@@ -25,6 +25,34 @@ describe("Board View", function(){
 
 describe("deck collection", function(){
 
+	it("has card models, and they have a imgurId", function(){
+		expect(
+			_.every(b.collection.models, function(model){
+				return model.attributes.imgurID !== undefined
+			})
+		).toBe(true)
+	})
+
+  it("has card models, and they have a link", function(){
+  	expect(
+	  	_.every(b.collection.models, function(model){
+				return model.attributes.link !== undefined
+			})
+  	).toBe(true);
+	})
+
+	it("has a pair array", function(){
+		expect(b.collection.pair)
+	})
 })
+
+describe("when the game is over", function(){
+	it("all spans are empty after game is complete",function(){
+		var bClone = _.clone(b.collection);
+		b.collection.remove(b.collection.models);
+		expect(b.$el.find("span > img").length).toBe(0)
+	})
+})
+
 
 
