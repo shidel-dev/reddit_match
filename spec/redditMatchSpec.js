@@ -63,7 +63,7 @@ describe("when the game is over", function(){
 		  el: $("<div id='container'></div>")
 		});
 		b.imgurFetch();
-		b.collection.remove(b.collection.models.slice(1,25));
+		b.collection.remove(b.collection.models.slice(2,25));
 		var cardCopy = _.clone(b.collection.models[0]);
 		cardCopy.cid = "abc";
 		b.collection.pair.push(cardCopy);

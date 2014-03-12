@@ -7,7 +7,7 @@ var Card = Backbone.Model.extend({
       this.collection.pair.push(this);
       if (this.matches(this.collection.pair)){
         if(this.collection.length === 2){
-          $("#container").html("<img id='a' src='" + _.sample(success) + "'></img>").css("display","block");
+          this.collection.trigger("completeGame");
             new Board({
               collection: new Deck(),
               el: "#container"
@@ -41,6 +41,7 @@ var Board = Backbone.View.extend({
 
   initialize: function() {
     var that = this;
+    this.collection.on("completeGame",this.displaySuccess.bind(this))
     $("#request").click(function() {
       that.imgurFetch();
       $(this).unbind();
@@ -85,6 +86,11 @@ var Board = Backbone.View.extend({
       }
     });
 
+  },
+
+  displaySuccess:function(){
+    console.log(this);
+    this.$el.html("<img id='a' src='" + _.sample(success) + "'></img>").css("display","block");
   },
 
   render: function(shuffColl) {
