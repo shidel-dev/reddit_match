@@ -40,24 +40,21 @@ var Menu = Backbone.View.extend({
 
   initialize: function() {
     var that = this;
-    this.$("#request").click(function() {
-      new Board({
-        model: new Backbone.Model({subreddit: that.$("#subreddit").val()}),
-        collection: new Deck(),
-        el: "#container"
-      }); 
-      $(this).unbind();
-    });
+    this.$("#request").click(_.bind(this.submit,this));
     this.$("#subreddit").keyup(function(e) {
       if (e.keyCode == 13) {
-        new Board({
-          model: new Backbone.Model({subreddit: that.$("#subreddit").val()}),
-          collection: new Deck(),
-          el: "#container"
-        }); 
-        $(this).unbind();
+        _.bind(that.submit,that)()
       }
     });  
+  },
+
+  submit: function() {
+    new Board({
+      model: new Backbone.Model({subreddit: this.$("#subreddit").val()}),
+      collection: new Deck(),
+      el: "#container"
+    }); 
+    $(this).unbind();
   }
 
 })
@@ -73,7 +70,6 @@ var Board = Backbone.View.extend({
 
   imgurFetch: function() {
     var that = this;
-    debugger;
     $.ajax({
       type: 'GET',
       url: "https://api.imgur.com/3/gallery/r/" + that.model.attributes.subreddit + "/top",
@@ -90,13 +86,11 @@ var Board = Backbone.View.extend({
           that.render(shuffle(that.collection.models));
           $("#menu > p").remove();
         }else{
-          // that.initialize();
           $("#menu").append("<p>Error fetching that subreddit...</p>");
           $("#subreddit").val("");
         }
       },
       error: function(err){
-        // that.initialize();
         $("#menu").append("<p>Error fetching that subreddit...</p>");
         $("#subreddit").val("");
       }
