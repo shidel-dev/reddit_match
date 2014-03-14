@@ -63,7 +63,6 @@ var Menu = Backbone.View.extend({
 var Board = Backbone.View.extend({
 
   initialize: function(subreddit) {
-    this.subreddit = subreddit;
     this.collection.on("completeGame",_.bind(this.displaySuccess,this));
     this.imgurFetch();
   },
