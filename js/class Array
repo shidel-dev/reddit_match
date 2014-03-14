@@ -1,0 +1,33 @@
+class Array 
+
+  def unzip
+    unzippedArray = Array.new(self[0].length, [])
+    unzippedArray.each_with_index do |item,n|
+      self.length.times do |i|
+        item << self[i][n]
+      end
+    end
+    unzippedArray
+  end
+end
+
+
+class Array
+  
+  def hashify 
+    obj = {}
+    self.each_with_index do |item, index|
+      obj[item] = self[index + 1] if index % 2 == 0 
+    end
+    obj
+  end
+end
+
+
+class Array 
+
+  def super_compact
+    self.select{|item|  item != nil && item.empty? == false}
+  end
+
+end  

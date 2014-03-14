@@ -36,31 +36,47 @@ var Deck = Backbone.Collection.extend({
   pair:[]
 });
 
-
-var Board = Backbone.View.extend({
+var Menu = Backbone.View.extend({
 
   initialize: function() {
     var that = this;
-    this.collection.on("completeGame",_.bind(this.displaySuccess,this));
-    $("#request").click(function() {
-      that.imgurFetch();
+    this.$("#request").click(function() {
+      new Board({
+        model: new Backbone.Model({subreddit: that.$("#subreddit").val()}),
+        collection: new Deck(),
+        el: "#container"
+      }); 
       $(this).unbind();
     });
-    $("#subreddit").keyup(function(e) {
+    this.$("#subreddit").keyup(function(e) {
       if (e.keyCode == 13) {
-        that.imgurFetch();
+        new Board({
+          model: new Backbone.Model({subreddit: that.$("#subreddit").val()}),
+          collection: new Deck(),
+          el: "#container"
+        }); 
         $(this).unbind();
       }
-    });
-    
+    });  
+  }
+
+})
+
+
+var Board = Backbone.View.extend({
+
+  initialize: function(subreddit) {
+    this.subreddit = subreddit;
+    this.collection.on("completeGame",_.bind(this.displaySuccess,this));
+    this.imgurFetch();
   },
 
   imgurFetch: function() {
-    var subreddit = $("#subreddit").val(),
-        that = this;
+    var that = this;
+    debugger;
     $.ajax({
       type: 'GET',
-      url: "https://api.imgur.com/3/gallery/r/" + subreddit + "/top",
+      url: "https://api.imgur.com/3/gallery/r/" + that.model.attributes.subreddit + "/top",
       headers: {
         'Authorization': 'Client-ID e0a49fd55972ffa'
       },
@@ -74,13 +90,13 @@ var Board = Backbone.View.extend({
           that.render(shuffle(that.collection.models));
           $("#menu > p").remove();
         }else{
-          that.initialize();
+          // that.initialize();
           $("#menu").append("<p>Error fetching that subreddit...</p>");
           $("#subreddit").val("");
         }
       },
       error: function(err){
-        that.initialize();
+        // that.initialize();
         $("#menu").append("<p>Error fetching that subreddit...</p>");
         $("#subreddit").val("");
       }
@@ -163,10 +179,7 @@ var CardView = Backbone.View.extend({
 });
 
 $(function() {
-  new Board({
-    collection: new Deck(),
-    el: "#container"
-  });
+  new Menu({el:"#menu"});
 });
 
 var success = ["http://31.media.tumblr.com/tumblr_m61zjnHB3o1qfw2dno1_400.gif",
