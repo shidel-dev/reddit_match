@@ -41,7 +41,7 @@ var Board = Backbone.View.extend({
 
   initialize: function() {
     var that = this;
-    this.collection.on("completeGame",this.displaySuccess.bind(this))
+    this.collection.on("completeGame",_.bind(this.displaySuccess,this));
     $("#request").click(function() {
       that.imgurFetch();
       $(this).unbind();
@@ -113,8 +113,8 @@ var CardView = Backbone.View.extend({
   },
 
   initialize:function() {
-    this.model.on("remove",this.match.bind(this));
-    this.model.on("fancyBoxClose", this.wrongPick.bind(this));
+    this.model.on("remove",_.bind(this.match,this));
+    this.model.on("fancyBoxClose", _.bind(this.wrongPick,this));
   },
 
   render: function() {
@@ -132,7 +132,7 @@ var CardView = Backbone.View.extend({
   },
 
   secondPick: function(pair) {
-    this.showImage(this.model.attributes.link,this.triggerWrong.bind(pair));
+    this.showImage(this.model.attributes.link,_.bind(this.triggerWrong, pair));
   },
 
   triggerWrong: function() {
@@ -176,26 +176,4 @@ var success = ["http://31.media.tumblr.com/tumblr_m61zjnHB3o1qfw2dno1_400.gif",
 function shuffle(o) {
   for (var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
     return o;
-}
-
-
-
-// -- shim for function.prototype.bind to be on the safe side!-- 
-if (!Function.prototype.bind) {
-  Function.prototype.bind = function (oThis) {
-    if (typeof this !== "function") {
-      // closest thing possible to the ECMAScript 5 internal IsCallable function
-      throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
-    }
-    var aArgs = Array.prototype.slice.call(arguments, 1), 
-    fToBind = this, 
-    fNOP = function () {},
-    fBound = function () {
-      return fToBind.apply(this instanceof fNOP && oThis ? this: oThis, aArgs.concat(Array.prototype.slice.call(arguments)));
-    };
-    fNOP.prototype = this.prototype;
-    fBound.prototype = new fNOP();
-
-    return fBound;
-  };
 }
