@@ -43,7 +43,7 @@ var Menu = Backbone.View.extend({
     this.$("#request").click(_.bind(this.submit,this));
     this.$("#subreddit").keyup(function(e) {
       if (e.keyCode == 13) {
-        _.bind(that.submit,that)()
+        _.bind(that.submit,that)();
       }
     });  
   },
@@ -98,7 +98,6 @@ var Board = Backbone.View.extend({
   },
 
   displaySuccess:function(){
-    console.log(this);
     this.$el.html("<img id='a' src='" + _.sample(success) + "'></img>").css("display","block");
   },
 
