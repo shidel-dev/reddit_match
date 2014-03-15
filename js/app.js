@@ -1,4 +1,14 @@
-var app = {};
+var app = {
+  success:["http://31.media.tumblr.com/tumblr_m61zjnHB3o1qfw2dno1_400.gif",
+               "http://25.media.tumblr.com/952f0af42c4f854875606879aa87fd3c/tumblr_mhnw8krEnm1s4zq2io1_500.gif",
+               "http://whatgifs.com/wp-content/uploads/2012/03/funny-gifs-winning.gif"],
+
+  shuffle: function (o){
+    for (var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+    return o;
+  }
+
+};
 
 app.Card = Backbone.Model.extend({
   gameLogic:function(target) {
@@ -36,7 +46,14 @@ app.Deck = Backbone.Collection.extend({
 
 app.Menu = Backbone.View.extend({
 
-  initialize: function() {
+  el:"#menu",
+
+  initialize: function(){
+    debugger;
+    this.addListners();
+  },
+
+  addListners: function() {
     var that = this;
     this.$("#request").click(_.bind(this.submit,this));
     this.$("#subreddit").keyup(function(e) {
@@ -79,7 +96,7 @@ app.Board = Backbone.View.extend({
           });
           that.collection.add(trimedObj);
           that.collection.add(trimedObj);
-          that.render(shuffle(that.collection.models));
+          that.render(app.shuffle(that.collection.models));
           $("#menu > p").remove();
         }else{
           $("#menu").append("<p>Error fetching that subreddit...</p>");
@@ -95,7 +112,7 @@ app.Board = Backbone.View.extend({
   },
 
   displaySuccess:function(){
-    this.$el.html("<img id='a' src='" + _.sample(success) + "'></img>").css("display","block");
+    this.$el.html("<img id='a' src='" + _.sample(app.success) + "'></img>").css("display","block");
   },
 
   render: function(shuffColl) {
@@ -167,15 +184,8 @@ app.CardView = Backbone.View.extend({
 
 });
 
+
 $(function() {
-  new app.Menu({el:"#menu"});
+  new app.Menu();
 });
 
-var success = ["http://31.media.tumblr.com/tumblr_m61zjnHB3o1qfw2dno1_400.gif",
-               "http://25.media.tumblr.com/952f0af42c4f854875606879aa87fd3c/tumblr_mhnw8krEnm1s4zq2io1_500.gif",
-               "http://whatgifs.com/wp-content/uploads/2012/03/funny-gifs-winning.gif"];
-
-function shuffle(o) {
-  for (var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
-    return o;
-}
