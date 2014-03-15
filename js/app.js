@@ -117,13 +117,13 @@ app.Board = Backbone.View.extend({
 
   displaySuccess:function(){
     this.$el.html("<img id='a' src='" + _.sample(app.success) + "'></img>").css("display","block");
-    app.menuInstance.addListners()
+    app.menuInstance.addListners();
   },
 
   render: function(shuffColl) {
     var that = this;
     this.$el.empty()
-    _(shuffColl).each(function(card) {
+    _.each(shuffColl,function(card) {
         that.$el.append(new app.CardView({
           model: card
         }).render().el);
