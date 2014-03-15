@@ -73,6 +73,7 @@ app.Menu = Backbone.View.extend({
 
   displayError: function(){
     this.$el.append("<p>Error fetching that subreddit...</p>");
+    this.addListners();
   }
 })
 
