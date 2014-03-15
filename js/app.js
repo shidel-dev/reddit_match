@@ -47,9 +47,8 @@ app.Deck = Backbone.Collection.extend({
 app.Menu = Backbone.View.extend({
 
   el:"#menu",
-
   initialize: function(){
-    debugger;
+    this.on("errorFetching",this.displayError)
     this.addListners();
   },
 
@@ -70,6 +69,10 @@ app.Menu = Backbone.View.extend({
       el: "#container"
     }); 
     $(this).unbind();
+  },
+
+  displayError: function(){
+    this.$el.append("<p>Error fetching that subreddit...</p>");
   }
 })
 
@@ -99,12 +102,12 @@ app.Board = Backbone.View.extend({
           that.render(app.shuffle(that.collection.models));
           $("#menu > p").remove();
         }else{
-          $("#menu").append("<p>Error fetching that subreddit...</p>");
+          app.menuInstance.trigger("errorFetching")
           $("#subreddit").val("");
         }
       },
       error: function(err){
-        $("#menu").append("<p>Error fetching that subreddit...</p>");
+        app.menuInstance.trigger("errorFetching")
         $("#subreddit").val("");
       }
     });
@@ -186,6 +189,6 @@ app.CardView = Backbone.View.extend({
 
 
 $(function() {
-  new app.Menu();
+  app.menuInstance = new app.Menu();
 });
 
