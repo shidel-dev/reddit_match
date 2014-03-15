@@ -1,4 +1,6 @@
-var Card = Backbone.Model.extend({
+var app = {};
+
+app.Card = Backbone.Model.extend({
   gameLogic:function(target) {
     if (this.collection.pair.length === 0){
       this.collection.pair.push(this);
@@ -27,12 +29,12 @@ var Card = Backbone.Model.extend({
 
 });
 
-var Deck = Backbone.Collection.extend({
-  model:Card,
+app.Deck = Backbone.Collection.extend({
+  model:app.Card,
   pair:[]
 });
 
-var Menu = Backbone.View.extend({
+app.Menu = Backbone.View.extend({
 
   initialize: function() {
     var that = this;
@@ -45,18 +47,17 @@ var Menu = Backbone.View.extend({
   },
 
   submit: function() {
-    new Board({
+    new app.Board({
       model: new Backbone.Model({subreddit: this.$("#subreddit").val()}),
-      collection: new Deck(),
+      collection: new app.Deck(),
       el: "#container"
     }); 
     $(this).unbind();
   }
-
 })
 
 
-var Board = Backbone.View.extend({
+app.Board = Backbone.View.extend({
 
   initialize: function(subreddit) {
     this.collection.on("completeGame",_.bind(this.displaySuccess,this));
@@ -101,7 +102,7 @@ var Board = Backbone.View.extend({
     var that = this;
     this.$el.empty()
     _(shuffColl).each(function(card) {
-        that.$el.append(new CardView({
+        that.$el.append(new app.CardView({
           model: card
         }).render().el);
     });
@@ -109,9 +110,9 @@ var Board = Backbone.View.extend({
   }
 });
 
-var CardView = Backbone.View.extend({
+app.CardView = Backbone.View.extend({
   tagName: "span",
-  model:Card,
+  model:app.Card,
   events: {
     "click": "sendAction"
   },
@@ -167,7 +168,7 @@ var CardView = Backbone.View.extend({
 });
 
 $(function() {
-  new Menu({el:"#menu"});
+  new app.Menu({el:"#menu"});
 });
 
 var success = ["http://31.media.tumblr.com/tumblr_m61zjnHB3o1qfw2dno1_400.gif",
