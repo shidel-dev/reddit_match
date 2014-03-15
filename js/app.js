@@ -8,10 +8,6 @@ var Card = Backbone.Model.extend({
       if (this.matches(this.collection.pair)){
         if(this.collection.length === 2){
           this.collection.trigger("completeGame");
-            new Board({
-              collection: new Deck(),
-              el: "#container"
-            });
             this.collection.pair = [];
         }
         var pair = _.clone(this.collection.pair);
