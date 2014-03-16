@@ -49,6 +49,7 @@ app.Menu = Backbone.View.extend({
   el:"#menu",
   initialize: function(){
     this.on("errorFetching",this.displayError)
+    this.on("successFetching",function(){this.$("p").remove()})
     this.addListners();
   },
 
@@ -68,10 +69,12 @@ app.Menu = Backbone.View.extend({
       collection: new app.Deck(),
       el: "#container"
     }); 
-    $(this).unbind();
+    this.$('#subreddit').unbind();
+    this.$('#request').unbind();
   },
 
   displayError: function(){
+    this.$("p").remove()
     this.$el.append("<p>Error fetching that subreddit...</p>");
     this.addListners();
   }
@@ -101,7 +104,7 @@ app.Board = Backbone.View.extend({
           that.collection.add(trimedObj);
           that.collection.add(trimedObj);
           that.render(app.shuffle(that.collection.models));
-          $("#menu > p").remove();
+          app.menuInstance.trigger("successFetching")
         }else{
           app.menuInstance.trigger("errorFetching")
           $("#subreddit").val("");
